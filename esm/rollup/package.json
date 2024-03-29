@@ -1,0 +1,19 @@
+{
+  "name": "webpack",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "dev": "rollup --config --watch --environment mode:development",
+    "build": "rollup --config --environment mode:production"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@rollup/plugin-babel": "^6.0.4",
+    "rollup": "^4.13.0",
+    "rollup-plugin-serve": "^1.1.1"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "imports": {
+    "@laboratory/root": "http://localhost:9000/laboratory-root.js",
+    "@laboratory/common": "http://localhost:9001/laboratory-common.js",
+    "@laboratory/react": "http://localhost:9002/laboratory-react.js",
+    "@laboratory/vite": "http://localhost:9004/src/main.ts",
+    "@laboratory/vue": "http://localhost:9005/js/laboratory-vue.js",
+    "@laboratory/nginx": "http://localhost:8081/test.js",
+    "@laboratory/webpack": "http://localhost:9006/laboratory-webpack.umd.js"
+  }
+}

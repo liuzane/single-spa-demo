@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "@laboratory/root": "https://liuzane.github.io/laboratory/root/laboratory-root.js",
+    "@laboratory/react": "https://liuzane.github.io/laboratory/react/laboratory-react.js"
+  }
+}

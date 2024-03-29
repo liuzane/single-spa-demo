@@ -1,0 +1,4 @@
+#TYPE Microsoft.PowerShell.Commands.HistoryInfo
+"Id","CommandLine","ExecutionStatus","StartExecutionTime","EndExecutionTime"
+"2","npm run dev","Stopped","2024/3/22 16:42:40","2024/3/22 16:42:42"
+"3","npm run build","Stopped","2024/3/22 16:42:49","2024/3/22 16:42:51"
