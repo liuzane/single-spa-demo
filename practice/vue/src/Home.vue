@@ -12,14 +12,16 @@ import HelloWorld from './components/HelloWorld.vue';
     </a>
   </div>
   <div>
-    <a href="/#/vue/">Go to Home</a>
-    <a href="/#/vue/foo">Go to Foo</a>
-    <a href="/#/vue/bar">Go to Bar</a>
+    <p>a tag</p>
+    <a href="/#/vue/" class="mr-2">Home</a>
+    <a href="/#/vue/foo" class="mr-2">Foo</a>
+    <a href="/#/vue/bar" class="mr-2">Bar</a>
   </div>
   <div>
-    <RouterLink to="/">Go to Home</RouterLink>
-    <RouterLink to="/foo">Go to Foo</RouterLink>
-    <RouterLink to="/bar">Go to Bar</RouterLink>
+    <p>RouterLink tag</p>
+    <RouterLink to="/vue/" class="mr-2">Home</RouterLink>
+    <RouterLink to="/vue/foo" class="mr-2">Foo</RouterLink>
+    <RouterLink to="/vue/bar" class="mr-2">Bar</RouterLink>
   </div>
   <HelloWorld msg="Vite + Vue" />
 </template>

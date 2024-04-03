@@ -1,7 +1,7 @@
 // Bases
 import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
+// import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 
 // Types
 import type { ConfigEnv, UserConfig } from 'vite';
@@ -36,11 +36,12 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     },
     plugins: [
       vue(),
-      cssInjectedByJsPlugin({
-        relativeCSSInjection: true,
-        suppressUnusedCssWarning: true,
-        jsAssetsFilterFunction: (entry) => entry.name === "laboratory-vue",
-      })
+      // cssInjectedByJsPlugin({
+      //   styleId: 'foo',
+      //   relativeCSSInjection: true,
+      //   suppressUnusedCssWarning: true,
+      //   // jsAssetsFilterFunction: (entry) => entry.name === 'laboratory-vue',
+      // })
     ],
     experimental: {
       // More detail see here: https://cn.vitejs.dev/guide/build.html#advanced-base-options
