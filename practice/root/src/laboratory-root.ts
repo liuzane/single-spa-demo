@@ -1,10 +1,6 @@
-// Base
+// Bases
 import { registerApplication, start } from 'single-spa';
-import {
-  constructApplications,
-  constructRoutes,
-  constructLayoutEngine,
-} from 'single-spa-layout';
+import { constructApplications, constructRoutes, constructLayoutEngine } from 'single-spa-layout';
 
 // Routes
 import { routesConfig } from './routes';

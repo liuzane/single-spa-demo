@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue';
+import { add } from '@laboratory/common';
+console.log('add', add(1, 1));
 </script>
 
 <template>

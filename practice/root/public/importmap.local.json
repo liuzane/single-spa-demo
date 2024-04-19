@@ -1,6 +1,0 @@
-{
-  "imports": {
-    "@laboratory/root": "http://localhost:9000/laboratory-root.js",
-    "@laboratory/webpack": "http://localhost:9006/laboratory-webpack.esm.js"
-  }
-}

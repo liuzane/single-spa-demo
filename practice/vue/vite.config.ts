@@ -1,30 +1,38 @@
 // Bases
 import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
-// import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
+import externalize from "vite-plugin-externalize-dependencies";
+import path from "path";
 
 // Types
-import type { ConfigEnv, UserConfig } from 'vite';
+import type { ConfigEnv, UserConfig } from "vite";
+// import type { OutputOptions, OutputBundle, OutputChunk } from "rollup";
 
-export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
+export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
+  const outputDir: string = 'dist';
   // Load environment variables
   const env: Record<string, string> = loadEnv(mode, process.cwd(), '');
   const port: number = Number(env.VITE_PORT);
   const host: string = env.VITE_DEPLOY_ORIGIN.replace(/^https?:\/\/|:\d{4,6}$/g, '');
-  const outputDir: string = 'dist';
-  
+  const origin: string = `${env.VITE_DEPLOY_ORIGIN}${env.VITE_PUBLIC_PATH}`;
+
   return {
+    define: {
+      __dirname: command === 'serve' ? JSON.stringify(__dirname.split(path.sep).join(path.posix.sep)) : '""'
+    },
     build: {
       outDir: outputDir,
+      manifest: true,
       rollupOptions: {
-        preserveEntrySignatures: 'allow-extension',
+        external: /^@laboratory\//,
         input: 'src/laboratory-vue.ts',
         output: {
           entryFileNames: '[name].js',
           // assetFileNames: '[name].[ext]'
           chunkFileNames: 'static/js/[name]-[hash].js',
           assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
-        }
+        },
+        preserveEntrySignatures: 'strict',
       }
     },
     server: {
@@ -36,23 +44,12 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     },
     plugins: [
       vue(),
-      // cssInjectedByJsPlugin({
-      //   styleId: 'foo',
-      //   relativeCSSInjection: true,
-      //   suppressUnusedCssWarning: true,
-      //   // jsAssetsFilterFunction: (entry) => entry.name === 'laboratory-vue',
-      // })
+      externalize({ externals: ['@laboratory/common', '@laboratory/manifest-loader'] })
     ],
     experimental: {
       // More detail see here: https://cn.vitejs.dev/guide/build.html#advanced-base-options
-      renderBuiltUrl(filename: string, { type }) {
-        console.log('filename:', filename, type);
-        return `${env.VITE_DEPLOY_ORIGIN}${env.VITE_PUBLIC_PATH}/${filename}`;
-        // if (type === 'public') {
-        //   return `${env.VITE_DEPLOY_ORIGIN}${env.VITE_PUBLIC_PATH}/${filename}`;
-        // } else {
-        //   return filename;
-        // }
+      renderBuiltUrl(filename: string) {
+        return `${origin}/${filename}`;
       }
     }
   }

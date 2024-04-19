@@ -20,11 +20,22 @@
   <script type="importmap">
     {
       "imports": {
-        "@laboratory/root": "http://localhost:9000/laboratory-root.esm.js",
-        "@laboratory/vue": "http://localhost:9004/src/laboratory-vue.ts",
-        "@laboratory/react": "http://localhost:9005/dist/laboratory-react.js"
+        "@laboratory/root": "http://localhost:9000/laboratory-root.js",
+        "@laboratory/common": "http://localhost:9003/common.js",
+        "@laboratory/manifest-loader": "http://localhost:9003/manifest-loader.js",
+        "@laboratory/vue": "http://localhost:9004/dist/laboratory-vue.js",
+        "@laboratory/react": "http://localhost:9005/dist/laboratory-react.js",
+        "@laboratory/platform": "http://localhost:9006/laboratory-platform.js"
       }
     }
+  </script>
+  <script type="module" src="http://localhost:9004/@vite/client"></script>
+  <script type="module">
+    import RefreshRuntime from 'http://localhost:9005/@react-refresh'
+    RefreshRuntime.injectIntoGlobalHook(window)
+    window.$RefreshReg$ = () => {}
+    window.$RefreshSig$ = () => (type) => type
+    window.__vite_plugin_react_preamble_installed__ = true
   </script>
   <% } else { %>
   <script type="importmap">
@@ -35,10 +46,6 @@
     }
   </script>
   <% } %>
-  <!--
-    If you need to support Angular applications, uncomment the script tag below to ensure only one instance of ZoneJS is loaded
-    Learn more about why at https://single-spa.js.org/docs/ecosystem-angular/#zonejs
-  -->
   <script src="https://cdn.jsdelivr.net/npm/import-map-overrides@2.2.0/dist/import-map-overrides.js"></script>
   <% files.forEach(function(file) { %>
   <% if (attributes.script) { %>

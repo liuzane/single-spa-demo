@@ -1,13 +1,14 @@
 // Bases
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
-// import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
+import externalize from "vite-plugin-externalize-dependencies";
+import path from "path";
 
 // Types
-import type { ConfigEnv, UserConfig, Plugin } from "vite";
-// import type { OutputOptions, OutputBundle, OutputChunk } from "rollup";
+import type { ConfigEnv, UserConfig } from "vite";
 
-export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
+export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
+  const outputDir: string = "dist";
   // Load environment variables
   const env: Record<string, string> = loadEnv(mode, process.cwd(), "");
   const port: number = Number(env.VITE_PORT);
@@ -15,13 +16,17 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
     /^https?:\/\/|:\d{4,6}$/g,
     ""
   );
-  const outputDir: string = "dist";
+  const origin: string = `${env.VITE_DEPLOY_ORIGIN}${env.VITE_PUBLIC_PATH}`;
 
   return {
+    define: {
+      __dirname: command === 'serve' ? JSON.stringify(__dirname.split(path.sep).join(path.posix.sep)) : '""'
+    },
     build: {
       outDir: outputDir,
+      manifest: true,
       rollupOptions: {
-        preserveEntrySignatures: "allow-extension",
+        external: /^@laboratory\//,
         input: "src/laboratory-react.tsx",
         output: {
           entryFileNames: "[name].js",
@@ -29,6 +34,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           chunkFileNames: "static/js/[name]-[hash].js",
           assetFileNames: "static/[ext]/[name]-[hash].[ext]",
         },
+        preserveEntrySignatures: "strict",
       },
     },
     server: {
@@ -36,53 +42,17 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       open: false,
       host,
       // Defines the origin of the generated asset URLs during development.
-      origin: env.VITE_DEPLOY_ORIGIN,
+      origin,
     },
     plugins: [
       react(),
-      // cssInjectedByJsPlugin({
-      //   relativeCSSInjection: true,
-      //   suppressUnusedCssWarning: true,
-      //   jsAssetsFilterFunction: (entry) => entry.name === 'laboratory-react',
-      // })
-      myPlugin(),
+      externalize({ externals: ['@laboratory/common', '@laboratory/manifest-loader'] })
     ],
     experimental: {
       // More detail see here: https://cn.vitejs.dev/guide/build.html#advanced-base-options
-      renderBuiltUrl(filename: string, { type }) {
-        console.log("filename:", filename, type);
-        return `${env.VITE_DEPLOY_ORIGIN}${env.VITE_PUBLIC_PATH}/${filename}`;
-        // if (type === 'public') {
-        //   return `${env.VITE_DEPLOY_ORIGIN}${env.VITE_PUBLIC_PATH}/${filename}`;
-        // } else {
-        //   return filename;
-        // }
-      },
+      renderBuiltUrl(filename: string) {
+        return `${origin}/${filename}`;
+      }
     },
   };
 });
-
-function myPlugin(): Plugin {
-  return {
-    name: "my-plugin",
-    transform(code: string, id: string) {
-      console.log('id: ', id);
-      if (this.getModuleInfo(id)?.isEntry) {
-        console.log('code: ', code);
-        console.log('module: ', this.getModuleInfo(id));
-      }
-      return {
-        code,
-        map: null,
-      };
-    },
-    // generateBundle(_options: OutputOptions, bundle: OutputBundle, _isWrite: boolean) {
-    //   console.log('bundle', bundle);
-    //   const entryFileName = Object.keys(bundle).find((fileName) => bundle[fileName].type == 'chunk' && (bundle[fileName] as OutputChunk).isEntry);
-    //   if (entryFileName && bundle[entryFileName]) {
-    //     const entryCssFileName = Object.keys(bundle).find((fileName) => bundle[fileName].type == 'asset' && bundle[fileName].name === entryFileName.replace(/\.js$/, '.css'));
-    //     (bundle[entryFileName] as OutputChunk).code += `import('${entryCssFileName}')`;
-    //   }
-    // }
-  };
-}

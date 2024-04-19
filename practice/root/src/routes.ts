@@ -1,21 +1,26 @@
 // Types
 import type { RoutesConfig } from 'single-spa-layout/dist/types/isomorphic/constructRoutes.d.ts';
 
-const applicationNames: string[] = ['common', 'vue', 'react', 'platform'];
+const applications: { path: string; name: string }[] = [
+  // { path: '/', name: 'common' },
+  { path: '/vue', name: 'vue' },
+  { path: '/react', name: 'react' },
+  { path: '/platform', name: 'platform' }
+];
 
 export const routesConfig: RoutesConfig = {
   mode: 'hash',
   base: '/',
   disableWarnings: false,
   containerEl: 'main',
-  routes: applicationNames.map(name => ({
+  routes: applications.map(application => ({
     type: 'route',
-    path: name,
+    path: application.path,
     routes: [
       {
         type: 'application',
-        name,
-      },
-    ],
+        name: application.name
+      }
+    ]
   }))
 };
