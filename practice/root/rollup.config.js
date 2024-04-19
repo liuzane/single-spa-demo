@@ -49,7 +49,7 @@ export default {
     // generate html file.
     html({
       title: 'Laboratory Root',
-      publicPath: isDevelopment ? '/' : '/laboratory',
+      publicPath: isDevelopment ? '/' : '/arbitrary/',
       // The template args details see here: https://www.npmjs.com/package/@rollup/plugin-html#template
       template: async ({ attributes, files, publicPath, title }) => {
         const html = await ejs.renderFile('./src/template.ejs', {
