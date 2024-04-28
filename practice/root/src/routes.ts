@@ -1,5 +1,10 @@
+// Loading
+import FullscreenLoading from '@laboratory/components/fullscreen-loading.js';
+
 // Types
 import type { RoutesConfig } from 'single-spa-layout/dist/types/isomorphic/constructRoutes.d.ts';
+
+FullscreenLoading.define();
 
 const applications: { path: string; name: string }[] = [
   // { path: '/', name: 'common' },
@@ -19,7 +24,8 @@ export const routesConfig: RoutesConfig = {
     routes: [
       {
         type: 'application',
-        name: application.name
+        name: application.name,
+        loader: '<fullscreen-loading />'
       }
     ]
   }))

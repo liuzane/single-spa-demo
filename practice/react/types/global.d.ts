@@ -1,16 +1,17 @@
-declare global {
-  enum RouterModeEnum {
-    Hash = 'hash',
-    HTML5 = 'html5',
-    Memory = 'memory'
-  }
+import * as React from 'react';
 
-  interface ViteEnv {
-    VITE_PORT: number;
-    VITE_PUBLIC_PATH: string;
-    VITE_ROUTER_HISTORY: RouterModeEnum;
-    VITE_API_ADDRESS: string;
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'page-anchor': PersonInfoProps;
+      'fullscreen-loading': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+    }
   }
+}
+
+interface PersonInfoProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> {
+  href: string,
+  class?: string
 }
 
 // just add this line code make global.d.ts works

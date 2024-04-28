@@ -1,30 +1,39 @@
 // Bases
 import { defineConfig, loadEnv } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import externalize from "vite-plugin-externalize-dependencies";
-import path from "path";
+import path from 'node:path';
 
 // Types
-import type { ConfigEnv, UserConfig } from "vite";
-// import type { OutputOptions, OutputBundle, OutputChunk } from "rollup";
+import type { ConfigEnv, UserConfig } from 'vite';
+
+// Plugins
+import vue from '@vitejs/plugin-vue';
+import externalize from 'vite-plugin-externalize-dependencies';
 
 export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
+  // load environment variables
+  const env: Record<string, string> = loadEnv(mode, process.cwd(), "");
+  // the output dir
   const outputDir: string = 'dist';
-  // Load environment variables
-  const env: Record<string, string> = loadEnv(mode, process.cwd(), '');
+  // dev server port
   const port: number = Number(env.VITE_PORT);
-  const host: string = env.VITE_DEPLOY_ORIGIN.replace(/^https?:\/\/|:\d{4,6}$/g, '');
+  // dev server host
+  const host: string = env.VITE_DEPLOY_ORIGIN.replace(/^https?:\/\/|:\d{4,6}$/g, "");
+  // static resource url origin
   const origin: string = `${env.VITE_DEPLOY_ORIGIN}${env.VITE_PUBLIC_PATH}`;
+  // exclude modules outside the bundle
+  const external: RegExp = /^@laboratory\//;
+  // check if the OS is windows
+  const isWindows: boolean = typeof process !== 'undefined' && process.platform === 'win32';
 
   return {
     define: {
-      __dirname: command === 'serve' ? JSON.stringify(__dirname.split(path.sep).join(path.posix.sep)) : '""'
+      __dirname: isWindows && command === 'serve' ? JSON.stringify(path.posix.normalize(__dirname.split(path.sep).join(path.posix.sep))) : '""'
     },
     build: {
       outDir: outputDir,
       manifest: true,
       rollupOptions: {
-        external: /^@laboratory\//,
+        external,
         input: 'src/laboratory-vue.ts',
         output: {
           entryFileNames: '[name].js',
@@ -44,7 +53,7 @@ export default defineConfig(({ mode, command }: ConfigEnv): UserConfig => {
     },
     plugins: [
       vue(),
-      externalize({ externals: ['@laboratory/common', '@laboratory/manifest-loader'] })
+      externalize({ externals: [external] })
     ],
     experimental: {
       // More detail see here: https://cn.vitejs.dev/guide/build.html#advanced-base-options

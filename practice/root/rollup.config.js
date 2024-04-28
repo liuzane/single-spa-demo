@@ -1,3 +1,7 @@
+// Bases
+import path from 'node:path';
+
+// Plugins
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
@@ -9,10 +13,16 @@ import { minify as htmlMinifier } from 'html-minifier-terser';
 import { rimraf } from 'rimraf';
 import copy from 'rollup-plugin-copy';
 import { glob } from 'glob';
-import path from 'path';
+import { loadEnv } from './env-loader.js';
 
+// check if the mode is development
 const isDevelopment = process.env.mode === 'development';
+// the output dir
 const outputDir = 'dist';
+// load environment variables
+const env = loadEnv(process.env.mode, process.cwd());
+
+console.log('env', env);
 
 export default {
   input: ['src/laboratory-root.ts'],
@@ -49,7 +59,7 @@ export default {
     // generate html file.
     html({
       title: 'Laboratory Root',
-      publicPath: isDevelopment ? '/' : '/arbitrary/',
+      publicPath: env.PUBLIC_PATH,
       // The template args details see here: https://www.npmjs.com/package/@rollup/plugin-html#template
       template: async ({ attributes, files, publicPath, title }) => {
         const html = await ejs.renderFile('./src/template.ejs', {
@@ -87,7 +97,7 @@ export default {
     // start dev server.
     isDevelopment
       ? serve({
-          port: 9000,
+          port: Number(env.PORT),
           // Multiple folders to serve from
           contentBase: [outputDir],
           historyApiFallback: '/index.html',

@@ -14,16 +14,12 @@ console.log('add', add(1, 1));
     </a>
   </div>
   <div>
-    <p>a tag</p>
-    <a href="/#/vue/" class="mr-2">Home</a>
-    <a href="/#/vue/foo" class="mr-2">Foo</a>
-    <a href="/#/vue/bar" class="mr-2">Bar</a>
-  </div>
-  <div>
     <p>RouterLink tag</p>
     <RouterLink to="/vue/" class="mr-2">Home</RouterLink>
     <RouterLink to="/vue/foo" class="mr-2">Foo</RouterLink>
     <RouterLink to="/vue/bar" class="mr-2">Bar</RouterLink>
+    <RouterLink to="/vue/bar" class="mr-2">Bar</RouterLink>
+    <a href="/#/react">React</a>
   </div>
   <HelloWorld msg="Vite + Vue" />
 </template>
@@ -35,9 +31,11 @@ console.log('add', add(1, 1));
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
 }

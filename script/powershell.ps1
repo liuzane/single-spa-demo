@@ -1,6 +1,10 @@
 $title = $args[0]
 $script = $args[1]
 
+if (!$script) {
+  $script = "dev"
+}
+
 #set window title
 $host.ui.RawUI.WindowTitle = $title
 
@@ -21,18 +25,13 @@ function Write-Color([String[]]$Text, [ConsoleColor[]]$Color) {
 
 $projectPath = (Get-Location).Path
 
-Write-Color -Text "Project: ",$title -Color Blue,Green
-Write-Color -Text "Path: ",$projectPath -Color Blue,Green
+Write-Color -Text "Project: ", $title -Color Blue, Green
+Write-Color -Text "Path: ", $projectPath -Color Blue, Green
 Write-Output ""
-Write-Color -Text "To Develop:" -Color Blue
-Write-Color -Text "npm run dev" -Color DarkRed
+Write-Color -Text "To Develop: ", "npm run dev" -Color Blue, DarkRed
 Write-Output ""
-Write-Color -Text "To Build:" -Color Blue
-Write-Color -Text "npm run build" -Color DarkRed
+Write-Color -Text "To Build: ", "npm run build" -Color Blue, DarkRed
 Write-Output ""
 
-if ($script) {
-  npm run $script
-} else {
-  npm run dev
-}
+Write-Output "npm run $script"
+npm run $script

@@ -3,7 +3,7 @@ export interface IOptions {
   origin?: string;
   dirname?: string;
   ignoreEntryFile?: boolean;
-  framework?: string;
+  manifestPath?: string;
 }
 
 export enum ModeEnum {
@@ -28,6 +28,7 @@ export class ManifestLoader {
   readonly origin: string;
   readonly dirname: string;
   readonly ignoreEntryFile: boolean;
+  readonly manifestPath: string;
   public resources: NodeListOf<Element>;
   public manifest: Record<string, IManifest>;
 
@@ -36,6 +37,7 @@ export class ManifestLoader {
     this.origin = options.origin || '';
     this.dirname = options.dirname || '';
     this.ignoreEntryFile = Boolean(options.ignoreEntryFile);
+    this.manifestPath = options.manifestPath || '/.vite/manifest.json';
     this.init();
   }
 
@@ -85,13 +87,13 @@ export class ManifestLoader {
 
   /** Load manifest data */
   private queryManifestData() {
-    fetch(`${this.origin}/.vite/manifest.json`)
+    fetch(this.origin + this.manifestPath)
       .then(response => {
         if (response.ok) {
           return response.json();
         } else {
           return Promise.reject(
-            'Unable to find .vite/manifest.json, please check build.manifest is true, see ' +
+            `Unable to find ${this.manifestPath}, please check build.manifest is true, see ` +
               'https://cn.vitejs.dev/config/build-options.html#build-manifest'
           );
         }
@@ -137,10 +139,12 @@ export class ManifestLoader {
         });
         // Dynamic entry file
       } else if (resource.isDynamicEntry) {
-        this.loadPreloadScriptResource(resource.file);
-        resource.css.forEach((url: string) => {
-          this.loadStyleSheetResource(url, true);
-        });
+        this.loadModulePreloadResource(resource.file);
+        if (resource.css?.length > 0) {
+          resource.css.forEach((url: string) => {
+            this.loadStyleSheetResource(url, true);
+          });
+        }
       }
     }
   }
@@ -175,7 +179,7 @@ export class ManifestLoader {
   }
 
   /** Load chunk file in document head */
-  private loadPreloadScriptResource(path: string, onlyReplace?: boolean): void {
+  private loadModulePreloadResource(path: string, onlyReplace?: boolean): void {
     const url: string = `${this.origin}/${path}`;
     const existElement: Element | null = document.head.querySelector(`link[rel="modulepreload"][href="${url}"]`);
     if (existElement) {

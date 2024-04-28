@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="/single-spa-mark-magenta.svg" />
   <title><%= title %></title>
   <!--
-    This CSP allows any SSL-enabled host and for arbitrary eval(), but you should limit these directives further to increase your app's security.
+    This CSP allows any SSL-enabled host and for laboratory eval(), but you should limit these directives further to increase your app's security.
     Learn more about CSP policies at https://content-security-policy.com/#directive
   -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: localhost:*; script-src 'unsafe-inline' 'unsafe-eval' https: localhost:*; img-src * data:; connect-src https: localhost:* ws://localhost:*; style-src 'unsafe-inline' localhost:*; object-src 'none';">
@@ -23,13 +23,14 @@
         "@laboratory/root": "http://localhost:9000/laboratory-root.js",
         "@laboratory/common": "http://localhost:9003/common.js",
         "@laboratory/manifest-loader": "http://localhost:9003/manifest-loader.js",
-        "@laboratory/vue": "http://localhost:9004/dist/laboratory-vue.js",
-        "@laboratory/react": "http://localhost:9005/dist/laboratory-react.js",
+        "@laboratory/components/": "http://localhost:9003/components/",
+        "@laboratory/vue": "http://localhost:9004/src/laboratory-vue.ts",
+        "@laboratory/react": "http://localhost:9005/src/laboratory-react.tsx",
         "@laboratory/platform": "http://localhost:9006/laboratory-platform.js"
       }
     }
   </script>
-  <script type="module" src="http://localhost:9004/@vite/client"></script>
+  <!-- <script type="module" src="http://localhost:9004/@vite/client"></script> -->
   <script type="module">
     import RefreshRuntime from 'http://localhost:9005/@react-refresh'
     RefreshRuntime.injectIntoGlobalHook(window)
@@ -41,12 +42,13 @@
   <script type="importmap">
     {
       "imports": {
-        "@laboratory/root": "http://localhost:8081/arbitrary/laboratory-root.js",
-        "@laboratory/common": "http://localhost:8081/arbitrary/common/common.js",
-        "@laboratory/manifest-loader": "http://localhost:8081/arbitrary/common/manifest-loader.js",
-        "@laboratory/vue": "http://localhost:8081/arbitrary/vue/laboratory-vue.js",
-        "@laboratory/react": "http://localhost:8081/arbitrary/react/laboratory-react.js",
-        "@laboratory/platform": "http://localhost:8081/arbitrary/platform/laboratory-platform.js"
+        "@laboratory/root": "http://localhost:8081/laboratory/laboratory-root.js",
+        "@laboratory/common": "http://localhost:8081/laboratory/common/common.js",
+        "@laboratory/manifest-loader": "http://localhost:8081/laboratory/common/manifest-loader.js",
+        "@laboratory/components/": "http://localhost:8081/laboratory/common/components/",
+        "@laboratory/vue": "http://localhost:8081/laboratory/vue/laboratory-vue.js",
+        "@laboratory/react": "http://localhost:8081/laboratory/react/laboratory-react.js",
+        "@laboratory/platform": "http://localhost:8081/laboratory/platform/laboratory-platform.js"
       }
     }
   </script>

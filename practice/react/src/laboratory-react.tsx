@@ -12,11 +12,14 @@ import { ModeEnum } from '@laboratory/manifest-loader';
 // Types
 import type { ManifestLoader as IManifestLoader } from '@laboratory/manifest-loader';
 
+// Loading
+import PageAnchor from '@laboratory/components/page-anchor.js';
+
 // Styles
 import './styles/index.css';
 import './styles/tailwind.css';
 
-import App from './App.tsx';
+import Router from './Router.tsx';
 
 // Variables
 let manifestLoader: IManifestLoader;
@@ -32,6 +35,7 @@ export function bootstrap() {
       dirname: __dirname,
       ignoreEntryFile: true
     });
+    PageAnchor.define();
   });
 }
 
@@ -43,7 +47,7 @@ export function mount() {
     root = ReactDOM.createRoot(document.getElementById('single-spa-application:react')!);
     root.render(
       <React.StrictMode>
-        <App />
+        <Router />
       </React.StrictMode>,
     );
     console.log('import.meta:', import.meta);

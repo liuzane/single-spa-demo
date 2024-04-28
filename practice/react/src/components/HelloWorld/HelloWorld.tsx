@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import './HelloWorld.css';
+// Bases
+import { useRouteError, isRouteErrorResponse } from "react-router-dom";
 
-function HelloWorld() {
+export function Component() {
   const [count, setCount] = useState(0)
 
   return (
@@ -11,4 +13,13 @@ function HelloWorld() {
   )
 }
 
-export default HelloWorld;
+export function ErrorBoundary() {
+  const error: any = useRouteError();
+  return isRouteErrorResponse(error) ? (
+    <h1>
+      {error.status} {error.statusText}
+    </h1>
+  ) : (
+    <h1>{error.message || error}</h1>
+  );
+}

@@ -8,16 +8,11 @@ declare module "@laboratory/manifest-loader" {
     origin?: string;
     dirname?: string;
     ignoreEntryFile?: boolean;
-    framework?: string;
+    manifestPath?: string;
   }
   export declare enum ModeEnum {
     Development = "development",
     Production = "production",
-  }
-  export declare enum FrameworkEnum {
-    None = "none",
-    Normal = "normal",
-    React = "react",
   }
   export interface IManifest {
     file: string;
@@ -34,7 +29,7 @@ declare module "@laboratory/manifest-loader" {
     readonly origin: string;
     readonly dirname: string;
     readonly ignoreEntryFile: boolean;
-    readonly framework: string;
+    readonly manifestPath: string;
     resources: NodeListOf<Element>;
     manifest: Record<string, IManifest>;
     constructor(options: IOptions);
@@ -45,6 +40,6 @@ declare module "@laboratory/manifest-loader" {
     private loadRemoteResources;
     private loadScriptResource;
     private loadStyleSheetResource;
-    private loadPreloadScriptResource;
+    private loadModulePreloadResource;
   }
 }

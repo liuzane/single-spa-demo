@@ -1,22 +1,40 @@
+// Bases
+import { glob } from 'glob';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+// Plugins
+import { loadEnv } from './env-loader.js';
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
-import serve from 'rollup-plugin-serve';
+import replace from '@rollup/plugin-replace';
 import terser from '@rollup/plugin-terser';
 import { rimraf } from 'rimraf';
 import copy from 'rollup-plugin-copy';
-import { glob } from 'glob';
+import serve from 'rollup-plugin-serve';
 
+// check if the mode is development
 const isDevelopment = process.env.mode === 'development';
+// the output dir
 const outputDir = 'dist';
+// load environment variables
+const env = loadEnv(process.env.mode, process.cwd());
+// entry files
+const inputs = Object.fromEntries(
+  glob
+    .sync('src/**/*.{ts,css}')
+    .map(file => [
+      path.relative('src', file.slice(0, file.length - path.extname(file).length)),
+      fileURLToPath(new URL(file, import.meta.url))
+    ])
+);
 
 export default {
-  input: glob.sync('src/**/*.{ts,css}'),
+  input: inputs,
   output: [
     {
       format: 'es',
-      entryFileNames: '[name].js',
-      assetFileNames: '[name][extname]',
       dir: outputDir
     }
   ],
@@ -42,6 +60,12 @@ export default {
     // transpile to es5
     babel({ babelHelpers: 'bundled' }),
 
+    // replaces targeted strings in files while bundling.
+    replace({
+      preventAssignment: true,
+      __PUBLIC_PATH: JSON.stringify(env.PUBLIC_PATH)
+    }),
+
     // minified bundle without html.
     isDevelopment ? null : terser(),
 
@@ -56,7 +80,7 @@ export default {
     // start dev server.
     isDevelopment
       ? serve({
-          port: 9003,
+          port: Number(env.PORT),
           // Multiple folders to serve from
           contentBase: [outputDir],
           // set headers
